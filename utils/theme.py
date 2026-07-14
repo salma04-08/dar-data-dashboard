@@ -245,9 +245,19 @@ def injecter_css():
     [data-baseweb="select"] div {{
     color: {texte} !important;
     }}
-    [data-baseweb="popover"] li {{
+    [data-baseweb="popover"],
+    [data-baseweb="popover"] > div,
+    [data-baseweb="menu"],
+    ul[data-baseweb="menu"] {{
+    border-radius: 0px !important;
+    background-color: {bg_carte} !important;
+    border: 1px solid {bordure} !important;
+    }}
+    [data-baseweb="popover"] li,
+    li[data-baseweb="menu-item"] {{
     background-color: {bg_carte} !important;
     color: {texte} !important;
+    border-radius: 0px !important;
     }}
     [data-testid="stCheckbox"] span[data-baseweb],
     [role="checkbox"] {{
