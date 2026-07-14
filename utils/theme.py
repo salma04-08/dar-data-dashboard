@@ -396,7 +396,7 @@ def rendre_cartes_kpi_grille_html(lignes) -> str:
 <style>
 @font-face {{ font-family:'CaviarDreams'; src:url('app/static/CaviarDreams.ttf'); font-weight:400; }}
 @font-face {{ font-family:'CaviarDreams'; src:url('app/static/CaviarDreams_Bold.ttf'); font-weight:700; }}
-html, body {{ margin:6px; padding:0; height:100%; box-sizing:border-box; overflow:hidden; background:{fond_page_iframe}; font-family:'CaviarDreams', sans-serif; }}
+html, body {{ margin:0; padding:6px; height:100%; box-sizing:border-box; overflow:hidden; background:{fond_page_iframe}; font-family:'CaviarDreams', sans-serif; }}
 .dd-grille {{ display:grid; grid-template-columns: repeat(12, 1fr); gap:6px; height:100%; }}
 .dd-carte {{ box-sizing:border-box; border-radius:0px; border:1px solid {bordure}; background:{bg_carte}; box-shadow:0px 1px 3px rgba(0,0,0,0.08); padding:16px 18px; overflow:hidden; }}
 .dd-cercle {{ width:36px; height:36px; border-radius:50%; background:{bg_cercle}; display:flex; align-items:center; justify-content:center; }}
