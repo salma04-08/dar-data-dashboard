@@ -1,0 +1,37 @@
+[theme]
+base = "light"
+primaryColor = "#926449"
+backgroundColor = "#F1F5F9"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#1C2434"
+font = "CaviarDreams, sans-serif"
+baseFontSize = 17
+
+[[theme.fontFaces]]
+family = "CaviarDreams"
+url = "app/static/CaviarDreams.ttf"
+style = "normal"
+weight = 400
+
+[[theme.fontFaces]]
+family = "CaviarDreams"
+url = "app/static/CaviarDreams_Bold.ttf"
+style = "normal"
+weight = 700
+
+[[theme.fontFaces]]
+family = "CaviarDreams"
+url = "app/static/CaviarDreams_Italic.ttf"
+style = "italic"
+weight = 400
+
+[client]
+toolbarMode = "minimal"
+
+[server]
+headless = true
+runOnSave = true
+enableStaticServing = true
+
+[browser]
+gatherUsageStats = false

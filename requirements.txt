@@ -1,0 +1,26 @@
+# Dépendances du DASHBOARD uniquement (Streamlit Community Cloud).
+# Ne pas confondre avec requirements.txt à la racine du projet, qui contient
+# en plus les librairies d'entraînement (tensorflow, prophet, selenium,
+# transformers, spacy...) inutiles une fois les modèles déjà entraînés et
+# sauvegardés en .pkl. Un environnement de déploiement plus léger = build
+# plus rapide et plus fiable sur le tier gratuit.
+
+streamlit>=1.38,<2.0
+pandas==2.2.2
+numpy==1.26.4
+sqlalchemy==2.0.30
+psycopg2-binary==2.9.9
+plotly==5.22.0
+python-dotenv==1.0.1
+
+# Phase 2 (carte interactive) :
+folium==0.16.0
+streamlit-folium==0.20.0
+branca==0.7.2
+
+# Phase 3 (estimation de prix) :
+scikit-learn==1.5.0
+xgboost==2.0.3
+
+# À activer avec la page Prévisions :
+# statsmodels==0.14.2
