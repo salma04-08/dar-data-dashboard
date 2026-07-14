@@ -46,6 +46,7 @@ META_ORANGE = "#F0950C"
 # Couleurs officielles TailAdmin v1.3 — mode sombre
 # ============================================================
 BOXDARK = "#3A2E27"      # fond des cartes en mode sombre (brun foncé terracotta)
+BOXDARK_CHART = "#524234"  # fond plus clair pour les cartes graphique, meilleur contraste avec les courbes
 BOXDARK_2 = "#241C17"    # fond de page / sidebar en mode sombre (brun très foncé terracotta)
 SIDEBAR_BG = "#2B1D16"   # fond de la sidebar — brun terracotta foncé, cohérent avec le thème
 STROKEDARK = "#4A3B31"
@@ -247,6 +248,11 @@ def injecter_css():
     [data-testid="stMultiSelect"] span[data-baseweb="tag"] {{
     border-radius: 0px !important;
     background-color: {PRIMARY} !important;
+    }}
+    [data-testid="stCustomComponentV1"] iframe,
+    [data-testid="stIFrame"] {{
+    border-radius: 0px !important;
+    border: 1px solid {bordure} !important;
     }}
     [data-testid="stAlert"] {{
     background-color: {bg_alerte} !important;
@@ -460,7 +466,7 @@ def rendre_carte_graphique_html(titre: str, couleur_puce: str, fig, hauteur: int
         hauteur: hauteur totale en pixels de l'iframe (carte comprise)
     """
     sombre = _mode_sombre()
-    bg_carte = BOXDARK if sombre else "#FFFFFF"
+    bg_carte = BOXDARK_CHART if sombre else "#FFFFFF"
     bordure = STROKEDARK if sombre else STROKE
     couleur_texte = BODYDARK1 if sombre else TEXTE
 
