@@ -231,7 +231,14 @@ def injecter_css():
     border: 1px solid {bordure} !important;
     border-radius: 0px !important;
     }}
-    [data-baseweb] {{
+    /* Règle universelle : tout élément de la zone principale et de la
+       sidebar passe en coins carrés, quel que soit son nom de classe
+       interne (qui change entre versions de Streamlit) — sauf nos
+       propres iframes, qui sont des documents isolés avec leur propre
+       CSS et ne sont donc pas affectés par cette règle de toute façon. */
+    [data-testid="stAppViewContainer"] *,
+    [data-testid="stMain"] *,
+    [data-testid="stSidebar"] * {{
     border-radius: 0px !important;
     }}
     [data-baseweb="select"] span,
@@ -242,11 +249,23 @@ def injecter_css():
     background-color: {bg_carte} !important;
     color: {texte} !important;
     }}
-    [data-testid="stCheckbox"] span[data-baseweb] {{
+    [data-testid="stCheckbox"] span[data-baseweb],
+    [role="checkbox"] {{
     background-color: {bg_carte} !important;
     border: 1px solid {bordure} !important;
     }}
-    [data-testid="stCheckbox"] label p {{
+    [data-testid="stCheckbox"] label p,
+    [data-testid="stCheckbox"] p {{
+    color: {texte} !important;
+    }}
+    [role="combobox"],
+    [role="listbox"] {{
+    background-color: {bg_carte} !important;
+    color: {texte} !important;
+    border: 1px solid {bordure} !important;
+    }}
+    [role="option"] {{
+    background-color: {bg_carte} !important;
     color: {texte} !important;
     }}
     [data-testid="stSlider"] [data-baseweb="slider"] {{
