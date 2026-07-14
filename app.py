@@ -9,6 +9,9 @@ Lancement (depuis la racine du projet C:\\Users\\fatimazahra\\Documents\\immo_ma
 """
 
 import streamlit as st
+from pathlib import Path
+
+BASE_DIR = Path(__file__).parent
 
 from utils.theme import injecter_css
 
@@ -19,7 +22,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-st.logo("06_dashboard/static/logo_dar_data_sombre.png", size="large")
+st.logo(str(BASE_DIR / "static" / "logo_dar_data_sombre.png"), size="large")
 
 with st.sidebar:
     st.toggle("🌙 Mode sombre", key="mode_sombre")
@@ -53,7 +56,7 @@ pg = st.navigation(
 # Habillage commun (sidebar)
 # ============================================================
 with st.sidebar:
-    st.image("06_dashboard/static/logo_dar_data_sombre.png", width=140)
+    st.image(str(BASE_DIR / "static" / "logo_dar_data_sombre.png"), width=140)
     st.caption("Analyse, prédiction et recommandation du marché immobilier marocain — biens à la vente")
     st.divider()
 

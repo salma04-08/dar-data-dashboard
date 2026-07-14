@@ -13,7 +13,9 @@ from utils.theme import (
     rendre_cartes_kpi_grille_html,
 )
 
-_logo = "06_dashboard/static/logo_dar_data_sombre.png" if st.session_state.get("mode_sombre", False) else "06_dashboard/static/logo_dar_data.png"
+from pathlib import Path
+_base_dir = Path(__file__).parent.parent
+_logo = str(_base_dir / "static" / ("logo_dar_data_sombre.png" if st.session_state.get("mode_sombre", False) else "logo_dar_data.png"))
 st.image(_logo, width=320)
 st.caption(
     "Plateforme intelligente d'analyse, de prédiction et de recommandation "
