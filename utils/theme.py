@@ -391,16 +391,24 @@ def rendre_cartes_kpi_grille_html(lignes) -> str:
     return _sans_indentation(f'''<!DOCTYPE html>
 <html>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
 @font-face {{ font-family:'CaviarDreams'; src:url('app/static/CaviarDreams.ttf'); font-weight:400; }}
 @font-face {{ font-family:'CaviarDreams'; src:url('app/static/CaviarDreams_Bold.ttf'); font-weight:700; }}
-html, body {{ margin:0; padding:6px; height:100%; box-sizing:border-box; overflow:hidden; background:{fond_page_iframe}; font-family:'CaviarDreams', sans-serif; }}
+html, body {{ margin:6px; padding:0; height:100%; box-sizing:border-box; overflow:hidden; background:{fond_page_iframe}; font-family:'CaviarDreams', sans-serif; }}
 .dd-grille {{ display:grid; grid-template-columns: repeat(12, 1fr); gap:6px; height:100%; }}
 .dd-carte {{ box-sizing:border-box; border-radius:0px; border:1px solid {bordure}; background:{bg_carte}; box-shadow:0px 1px 3px rgba(0,0,0,0.08); padding:16px 18px; overflow:hidden; }}
 .dd-cercle {{ width:36px; height:36px; border-radius:50%; background:{bg_cercle}; display:flex; align-items:center; justify-content:center; }}
 .dd-valeur {{ font-size:21px; font-weight:700; color:{couleur_valeur}; margin:14px 0 0; white-space:nowrap; }}
 .dd-label {{ font-size:13px; color:{couleur_label}; margin:2px 0 0; }}
+@media (max-width: 600px) {{
+html, body {{ overflow-y: auto; overflow-x: hidden; height: auto; min-height: 100%; }}
+.dd-grille {{ grid-template-columns: repeat(2, 1fr); height: auto; }}
+.dd-carte {{ grid-column: span 1 !important; padding: 12px 14px; }}
+.dd-valeur {{ font-size: 17px; white-space: normal; }}
+.dd-cercle {{ width: 30px; height: 30px; }}
+}}
 </style>
 </head>
 <body>
@@ -468,14 +476,19 @@ def rendre_tableau_html(df, hauteur: int = 320) -> str:
     return _sans_indentation(f'''<!DOCTYPE html>
 <html>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 @font-face {{ font-family:'CaviarDreams'; src:url('app/static/CaviarDreams.ttf'); font-weight:400; }}
 @font-face {{ font-family:'CaviarDreams'; src:url('app/static/CaviarDreams_Bold.ttf'); font-weight:700; }}
 html, body {{ margin:0; padding:6px; height:100%; box-sizing:border-box; overflow:auto; background:transparent; font-family:'CaviarDreams', sans-serif; }}
-.dd-carte {{ box-sizing:border-box; border-radius:0px; border:1px solid {bordure}; background:{bg_carte}; box-shadow:0px 1px 3px rgba(0,0,0,0.08); overflow:hidden; }}
+.dd-carte {{ box-sizing:border-box; border-radius:0px; border:1px solid {bordure}; background:{bg_carte}; box-shadow:0px 1px 3px rgba(0,0,0,0.08); overflow-x:auto; overflow-y:hidden; }}
 table {{ width:100%; border-collapse:collapse; font-size:14px; }}
 th {{ text-align:center; font-weight:700; color:{couleur_entete}; padding:12px 14px; border-bottom:2px solid {bordure}; white-space:nowrap; }}
-td {{ padding:10px 14px; color:{couleur_texte}; border-bottom:1px solid {bordure}; }}
+td {{ padding:10px 14px; color:{couleur_texte}; border-bottom:1px solid {bordure}; white-space:nowrap; }}
+@media (max-width: 600px) {{
+table {{ font-size:12px; }}
+th, td {{ padding:8px 10px; }}
+}}
 </style>
 </head>
 <body>
@@ -520,6 +533,7 @@ def rendre_carte_graphique_html(titre: str, couleur_puce: str, fig, hauteur: int
     return _sans_indentation(f'''<!DOCTYPE html>
 <html>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
 <style>
 @font-face {{ font-family:'CaviarDreams'; src:url('app/static/CaviarDreams.ttf'); font-weight:400; }}
@@ -539,6 +553,10 @@ overflow: hidden;
 .dd-puce {{ width:10px; height:10px; min-width:10px; border-radius:50%; background:{couleur_puce}; }}
 .dd-texte {{ font-size:18px; font-weight:700; color:{couleur_texte}; }}
 #graphique {{ width:100%; height:{hauteur_graphique}px; }}
+@media (max-width: 600px) {{
+.dd-carte {{ padding: 14px 12px; }}
+.dd-texte {{ font-size: 15px; }}
+}}
 </style>
 </head>
 <body>
