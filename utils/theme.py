@@ -231,6 +231,9 @@ def injecter_css():
     border: 1px solid {bordure} !important;
     border-radius: 0px !important;
     }}
+    [data-baseweb] {{
+    border-radius: 0px !important;
+    }}
     [data-baseweb="select"] span,
     [data-baseweb="select"] div {{
     color: {texte} !important;
@@ -238,6 +241,16 @@ def injecter_css():
     [data-baseweb="popover"] li {{
     background-color: {bg_carte} !important;
     color: {texte} !important;
+    }}
+    [data-testid="stCheckbox"] span[data-baseweb] {{
+    background-color: {bg_carte} !important;
+    border: 1px solid {bordure} !important;
+    }}
+    [data-testid="stCheckbox"] label p {{
+    color: {texte} !important;
+    }}
+    [data-testid="stSlider"] [data-baseweb="slider"] {{
+    background: transparent !important;
     }}
     [data-testid="stButton"] button,
     [data-testid="stFormSubmitButton"] button,
