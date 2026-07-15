@@ -50,6 +50,18 @@ if st.button("Estimer le prix", type="primary"):
     ]
     st.iframe(rendre_cartes_kpi_grille_html([cartes_resultat]), height=150)
 
+    prix_bas = prix_total * 0.70
+    prix_haut = prix_total * 0.90
+    st.info(
+        f"💬 **Fourchette ajustée pour marge de négociation** : "
+        f"{prix_bas:,.0f} — {prix_haut:,.0f} MAD".replace(",", " ") + "\n\n"
+        "Le prix estimé ci-dessus reflète le prix *affiché* sur les annonces. Sur le marché "
+        "immobilier marocain, les prix affichés sont généralement supérieurs de 10 à 30% au "
+        "prix de vente réellement conclu (source : ReaConsult, expert RICS Maroc). Cette "
+        "fourchette applique cet écart documenté au prix estimé — ce n'est pas une correction "
+        "du modèle, mais un ajustement de contexte de marché, à considérer comme indicatif."
+    )
+
     if r2 is not None:
         if r2 >= 0.6:
             st.success(f"Fiabilité du modèle {type_bien} : R² = {r2:.2f} (bonne)")
