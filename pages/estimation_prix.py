@@ -2,7 +2,6 @@
 
 import streamlit as st
 
-from utils.db import get_prix_moyen_quartier_type, get_prix_moyen_ville_type
 from utils.theme import rendre_cartes_kpi_grille_html
 from utils.ml import (
     R2_MODELES,
@@ -69,41 +68,6 @@ if st.button("Estimer le prix", type="primary"):
                 f"probablement en raison du peu de données {type_bien.lower()} disponibles "
                 "à l'entraînement. Estimation indicative uniquement."
             )
-
-    resultat_comparaison = get_prix_moyen_quartier_type(ville, quartier_groupe, type_bien)
-    niveau_comparaison = f"le quartier {label_quartier(quartier_groupe)}"
-    if resultat_comparaison is None:
-        resultat_comparaison = get_prix_moyen_ville_type(ville, type_bien)
-        niveau_comparaison = f"{ville} (données insuffisantes pour ce quartier précis)"
-
-    if resultat_comparaison is not None:
-        prix_moyen_ville, nb_annonces_comparaison = resultat_comparaison
-        ecart_pct = (prix_m2 / prix_moyen_ville - 1) * 100
-
-        if abs(ecart_pct) <= 5:
-            badge, message = "🟢", "Prix cohérent avec le marché"
-        elif abs(ecart_pct) <= 20:
-            sens = "inférieur" if ecart_pct < 0 else "supérieur"
-            badge, message = "🟡", f"Légèrement {sens} au marché ({ecart_pct:+.1f}%)"
-        else:
-            sens = "inférieur" if ecart_pct < 0 else "supérieur"
-            badge, message = "🔴", f"Nettement {sens} au marché ({ecart_pct:+.1f}%)"
-
-        st.markdown(f"**Comparaison avec le marché** {badge}")
-        cartes_comparaison = [
-            ("regle", "Estimation IA", f"{prix_m2:,.0f} MAD/m²".replace(",", " ")),
-            ("regle", f"Moyenne {type_bien} — {niveau_comparaison}", f"{prix_moyen_ville:,.0f} MAD/m²".replace(",", " ")),
-            ("regle", "Écart", f"{ecart_pct:+.1f}%"),
-        ]
-        st.iframe(rendre_cartes_kpi_grille_html([cartes_comparaison]), height=150)
-        st.caption(
-            f"{message} — comparé à {nb_annonces_comparaison} annonces {type_bien.lower()} "
-            f"(valeurs extrêmes exclues du calcul de la moyenne)."
-        )
-    else:
-        st.caption(
-            f"Pas assez d'annonces {type_bien.lower()} à {ville} pour une comparaison de marché fiable."
-        )
 
 st.divider()
 st.caption(
