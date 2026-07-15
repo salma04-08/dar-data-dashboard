@@ -409,22 +409,59 @@ def get_repartition_par_ville() -> pd.DataFrame:
 
 
 @st.cache_data(ttl=600, show_spinner=False)
-def get_prix_moyen_ville_type(ville: str, type_bien: str):
+def get_prix_moyen_quartier_type(ville: str, quartier: str, type_bien: str):
     """
-    Prix moyen au m² pour une ville ET un type de bien précis — contrairement
-    à get_repartition_par_ville() qui mélange tous les types (un appartement
-    ne devrait pas être comparé à une moyenne qui inclut villas et riads).
-    Renvoie None si aucune annonce ne correspond (évite une comparaison sur
-    un échantillon vide ou trop petit pour être fiable).
+    Prix moyen au m² pour un quartier ET un type de bien précis, avec les
+    valeurs extrêmes exclues (percentiles 5-95, calculés sur ce sous-groupe
+    précis, pas un seuil global) — évite qu'une poignée de prix aberrants
+    (erreur de saisie, annonce atypique) ne fausse la moyenne de comparaison.
+
+    Renvoie None si aucune annonce ne correspond ou si l'échantillon est trop
+    petit pour être fiable (moins de 10 annonces après filtrage).
     """
     df = run_query("""
-        SELECT COUNT(*) AS nb_annonces, ROUND(AVG(a.prix_m2)) AS prix_m2_moyen
-        FROM fait_annonces_actuelles a
-        JOIN dim_geographie g ON a.id_geo = g.id_geo
-        JOIN dim_type_bien tb ON a.id_type_bien = tb.id_type_bien
-        WHERE a.prix_m2 IS NOT NULL AND g.ville = :ville AND tb.type_precision = :type_bien;
+        WITH filtre AS (
+            SELECT a.prix_m2,
+                   PERCENTILE_CONT(0.05) WITHIN GROUP (ORDER BY a.prix_m2) OVER () AS p5,
+                   PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY a.prix_m2) OVER () AS p95
+            FROM fait_annonces_actuelles a
+            JOIN dim_geographie g ON a.id_geo = g.id_geo
+            JOIN dim_type_bien tb ON a.id_type_bien = tb.id_type_bien
+            WHERE a.prix_m2 IS NOT NULL AND g.ville = :ville
+              AND g.quartier = :quartier AND tb.type_precision = :type_bien
+        )
+        SELECT COUNT(*) AS nb_annonces, ROUND(AVG(prix_m2)) AS prix_m2_moyen
+        FROM filtre
+        WHERE prix_m2 BETWEEN p5 AND p95;
+    """, {"ville": ville, "quartier": quartier, "type_bien": type_bien})
+    if df.empty or pd.isna(df["nb_annonces"].iloc[0]) or df["nb_annonces"].iloc[0] < 10:
+        return None
+    return float(df["prix_m2_moyen"].iloc[0]), int(df["nb_annonces"].iloc[0])
+
+
+@st.cache_data(ttl=600, show_spinner=False)
+def get_prix_moyen_ville_type(ville: str, type_bien: str):
+    """
+    Repli sur la ville entière (toujours filtrée des valeurs extrêmes) quand
+    get_prix_moyen_quartier_type() renvoie None — utile notamment pour les
+    quartiers regroupés sous "Autre_<ville>" par le modèle ML, qui ne
+    correspondent à aucun quartier réel de la base.
+    """
+    df = run_query("""
+        WITH filtre AS (
+            SELECT a.prix_m2,
+                   PERCENTILE_CONT(0.05) WITHIN GROUP (ORDER BY a.prix_m2) OVER () AS p5,
+                   PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY a.prix_m2) OVER () AS p95
+            FROM fait_annonces_actuelles a
+            JOIN dim_geographie g ON a.id_geo = g.id_geo
+            JOIN dim_type_bien tb ON a.id_type_bien = tb.id_type_bien
+            WHERE a.prix_m2 IS NOT NULL AND g.ville = :ville AND tb.type_precision = :type_bien
+        )
+        SELECT COUNT(*) AS nb_annonces, ROUND(AVG(prix_m2)) AS prix_m2_moyen
+        FROM filtre
+        WHERE prix_m2 BETWEEN p5 AND p95;
     """, {"ville": ville, "type_bien": type_bien})
-    if df.empty or df["nb_annonces"].iloc[0] < 10:
+    if df.empty or pd.isna(df["nb_annonces"].iloc[0]) or df["nb_annonces"].iloc[0] < 10:
         return None
     return float(df["prix_m2_moyen"].iloc[0]), int(df["nb_annonces"].iloc[0])
 
