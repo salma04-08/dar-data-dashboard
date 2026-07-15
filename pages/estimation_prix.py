@@ -52,9 +52,12 @@ if st.button("Estimer le prix", type="primary"):
 
     prix_bas = prix_total * 0.70
     prix_haut = prix_total * 0.90
+    prix_m2_bas = prix_m2 * 0.70
+    prix_m2_haut = prix_m2 * 0.90
     st.info(
-        f"💬 **Fourchette ajustée pour marge de négociation** : "
-        f"{prix_bas:,.0f} — {prix_haut:,.0f} MAD".replace(",", " ") + "\n\n"
+        f"💬 **Fourchette ajustée pour marge de négociation**\n\n"
+        f"- Prix total : {prix_bas:,.0f} — {prix_haut:,.0f} MAD\n".replace(",", " ") +
+        f"- Prix / m² : {prix_m2_bas:,.0f} — {prix_m2_haut:,.0f} MAD/m²\n\n".replace(",", " ") +
         "Le prix estimé ci-dessus reflète le prix *affiché* sur les annonces. Sur le marché "
         "immobilier marocain, les prix affichés sont généralement supérieurs de 10 à 30% au "
         "prix de vente réellement conclu (source : ReaConsult, expert RICS Maroc). Cette "
