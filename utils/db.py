@@ -409,6 +409,27 @@ def get_repartition_par_ville() -> pd.DataFrame:
 
 
 @st.cache_data(ttl=600, show_spinner=False)
+def get_prix_moyen_ville_type(ville: str, type_bien: str):
+    """
+    Prix moyen au m² pour une ville ET un type de bien précis — contrairement
+    à get_repartition_par_ville() qui mélange tous les types (un appartement
+    ne devrait pas être comparé à une moyenne qui inclut villas et riads).
+    Renvoie None si aucune annonce ne correspond (évite une comparaison sur
+    un échantillon vide ou trop petit pour être fiable).
+    """
+    df = run_query("""
+        SELECT COUNT(*) AS nb_annonces, ROUND(AVG(a.prix_m2)) AS prix_m2_moyen
+        FROM fait_annonces_actuelles a
+        JOIN dim_geographie g ON a.id_geo = g.id_geo
+        JOIN dim_type_bien tb ON a.id_type_bien = tb.id_type_bien
+        WHERE a.prix_m2 IS NOT NULL AND g.ville = :ville AND tb.type_precision = :type_bien;
+    """, {"ville": ville, "type_bien": type_bien})
+    if df.empty or df["nb_annonces"].iloc[0] < 10:
+        return None
+    return float(df["prix_m2_moyen"].iloc[0]), int(df["nb_annonces"].iloc[0])
+
+
+@st.cache_data(ttl=600, show_spinner=False)
 def get_repartition_par_type() -> pd.DataFrame:
     """
     Répartition par type de bien, limitée aux 5 catégories les plus

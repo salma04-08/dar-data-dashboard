@@ -2,7 +2,7 @@
 
 import streamlit as st
 
-from utils.db import get_repartition_par_ville
+from utils.db import get_prix_moyen_ville_type
 from utils.theme import rendre_cartes_kpi_grille_html
 from utils.ml import (
     R2_MODELES,
@@ -70,29 +70,32 @@ if st.button("Estimer le prix", type="primary"):
                 "à l'entraînement. Estimation indicative uniquement."
             )
 
-    df_ville = get_repartition_par_ville()
-    ligne_ville = df_ville.loc[df_ville["ville"] == ville, "prix_m2_moyen"]
-    if not ligne_ville.empty:
-        prix_moyen_ville = float(ligne_ville.iloc[0])
+    resultat_comparaison = get_prix_moyen_ville_type(ville, type_bien)
+    if resultat_comparaison is not None:
+        prix_moyen_ville, nb_annonces_comparaison = resultat_comparaison
         ecart_pct = (prix_m2 / prix_moyen_ville - 1) * 100
 
         if abs(ecart_pct) <= 5:
             badge, message = "🟢", "Prix cohérent avec le marché"
-        elif ecart_pct < 0:
-            badge, message = "🟡", f"Légèrement inférieur au marché ({ecart_pct:+.1f}%)"
+        elif abs(ecart_pct) <= 20:
+            sens = "inférieur" if ecart_pct < 0 else "supérieur"
+            badge, message = "🟡", f"Légèrement {sens} au marché ({ecart_pct:+.1f}%)"
         else:
-            badge, message = "🟡", f"Légèrement supérieur au marché ({ecart_pct:+.1f}%)"
-        if abs(ecart_pct) > 20:
-            badge = "🔴"
+            sens = "inférieur" if ecart_pct < 0 else "supérieur"
+            badge, message = "🔴", f"Nettement {sens} au marché ({ecart_pct:+.1f}%)"
 
         st.markdown(f"**Comparaison avec le marché** {badge}")
         cartes_comparaison = [
             ("regle", "Estimation IA", f"{prix_m2:,.0f} MAD/m²".replace(",", " ")),
-            ("regle", f"Moyenne à {ville}", f"{prix_moyen_ville:,.0f} MAD/m²".replace(",", " ")),
+            ("regle", f"Moyenne {type_bien} à {ville}", f"{prix_moyen_ville:,.0f} MAD/m²".replace(",", " ")),
             ("regle", "Écart", f"{ecart_pct:+.1f}%"),
         ]
         st.iframe(rendre_cartes_kpi_grille_html([cartes_comparaison]), height=150)
-        st.caption(message)
+        st.caption(f"{message} — comparé à {nb_annonces_comparaison} annonces {type_bien.lower()} à {ville}.")
+    else:
+        st.caption(
+            f"Pas assez d'annonces {type_bien.lower()} à {ville} pour une comparaison de marché fiable."
+        )
 
 st.divider()
 st.caption(
