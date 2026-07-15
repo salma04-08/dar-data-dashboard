@@ -50,19 +50,6 @@ if st.button("Estimer le prix", type="primary"):
     ]
     st.iframe(rendre_cartes_kpi_grille_html([cartes_resultat]), height=150)
 
-    prix_bas = prix_total * 0.70
-    prix_haut = prix_total * 0.90
-    prix_m2_bas = prix_m2 * 0.70
-    prix_m2_haut = prix_m2 * 0.90
-    st.info(
-        f"**Fourchette de négociation estimée**\n\n"
-        f"- Prix total : {prix_bas:,.0f} — {prix_haut:,.0f} MAD\n".replace(",", " ") +
-        f"- Prix / m² : {prix_m2_bas:,.0f} — {prix_m2_haut:,.0f} MAD/m²\n\n".replace(",", " ") +
-        "Les prix affichés sur le marché immobilier marocain intègrent généralement une marge "
-        "de négociation de 10 à 30% par rapport au prix de vente final (source : ReaConsult, "
-        "expert RICS Maroc)."
-    )
-
     if r2 is not None:
         if r2 >= 0.6:
             st.success(f"Fiabilité du modèle {type_bien} : R² = {r2:.2f} (bonne)")
