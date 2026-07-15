@@ -52,27 +52,47 @@ if st.button("Estimer le prix", type="primary"):
 
     if r2 is not None:
         if r2 >= 0.6:
-            st.success(f"Fiabilité du modèle {type_bien} : R² = {r2:.2f} (bonne)")
+            st.success(
+                f"Fiabilité du modèle {type_bien} : Bonne (R² = {r2:.2f}) — "
+                f"le modèle explique environ {r2*100:.0f}% de la variation des prix observés."
+            )
         elif r2 >= 0.4:
             st.warning(
-                f"Fiabilité du modèle {type_bien} : R² = {r2:.2f} (modérée — "
-                "à prendre comme un ordre de grandeur, pas une valeur exacte)"
+                f"Fiabilité du modèle {type_bien} : Modérée (R² = {r2:.2f}) — "
+                f"le modèle explique environ {r2*100:.0f}% de la variation des prix observés, "
+                "à prendre comme un ordre de grandeur, pas une valeur exacte."
             )
         else:
             st.warning(
-                f"Fiabilité du modèle {type_bien} : R² = {r2:.2f} (limitée — "
-                f"peu de données {type_bien.lower()} disponibles à l'entraînement, "
-                "estimation indicative uniquement)"
+                f"Fiabilité du modèle {type_bien} : Limitée (R² = {r2:.2f}) — "
+                f"le modèle explique environ {r2*100:.0f}% de la variation des prix observés, "
+                f"probablement en raison du peu de données {type_bien.lower()} disponibles "
+                "à l'entraînement. Estimation indicative uniquement."
             )
 
     df_ville = get_repartition_par_ville()
     ligne_ville = df_ville.loc[df_ville["ville"] == ville, "prix_m2_moyen"]
     if not ligne_ville.empty:
-        prix_moyen_ville_fmt = f"{float(ligne_ville.iloc[0]):,.0f}".replace(",", " ")
-        st.caption(
-            f"À titre de comparaison, le prix moyen au m² toutes annonces confondues "
-            f"à {ville} est de {prix_moyen_ville_fmt} MAD."
-        )
+        prix_moyen_ville = float(ligne_ville.iloc[0])
+        ecart_pct = (prix_m2 / prix_moyen_ville - 1) * 100
+
+        if abs(ecart_pct) <= 5:
+            badge, message = "🟢", "Prix cohérent avec le marché"
+        elif ecart_pct < 0:
+            badge, message = "🟡", f"Légèrement inférieur au marché ({ecart_pct:+.1f}%)"
+        else:
+            badge, message = "🟡", f"Légèrement supérieur au marché ({ecart_pct:+.1f}%)"
+        if abs(ecart_pct) > 20:
+            badge = "🔴"
+
+        st.markdown(f"**Comparaison avec le marché** {badge}")
+        cartes_comparaison = [
+            ("regle", "Estimation IA", f"{prix_m2:,.0f} MAD/m²".replace(",", " ")),
+            ("regle", f"Moyenne à {ville}", f"{prix_moyen_ville:,.0f} MAD/m²".replace(",", " ")),
+            ("regle", "Écart", f"{ecart_pct:+.1f}%"),
+        ]
+        st.iframe(rendre_cartes_kpi_grille_html([cartes_comparaison]), height=150)
+        st.caption(message)
 
 st.divider()
 st.caption(
