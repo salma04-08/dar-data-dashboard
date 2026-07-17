@@ -77,7 +77,7 @@ def appliquer_theme(fig):
     couleur_texte = BODYDARK1 if _mode_sombre() else TEXTE
     fig.update_layout(
         colorway=PALETTE_CATEGORIELLE,
-        font=dict(family="CaviarDreams, -apple-system, sans-serif", color=couleur_texte),
+        font=dict(family="Inter, -apple-system, sans-serif", color=couleur_texte),
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
     )
@@ -192,7 +192,7 @@ def injecter_css():
     css = f"""
     <style>
     html, body, [class*="css"] {{
-    font-family: 'CaviarDreams', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }}
     [data-testid="stAppViewContainer"] {{
     background-color: {bg_app} !important;
@@ -394,9 +394,9 @@ def rendre_cartes_kpi_grille_html(lignes) -> str:
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
-@font-face {{ font-family:'CaviarDreams'; src:url('app/static/CaviarDreams.ttf'); font-weight:400; }}
-@font-face {{ font-family:'CaviarDreams'; src:url('app/static/CaviarDreams_Bold.ttf'); font-weight:700; }}
-html, body {{ margin:0; padding:6px; height:100%; box-sizing:border-box; overflow:hidden; background:{fond_page_iframe}; font-family:'CaviarDreams', sans-serif; }}
+@font-face {{ font-family:'Inter'; src:url('app/static/Inter-Regular.ttf'); font-weight:400; }}
+@font-face {{ font-family:'Inter'; src:url('app/static/Inter-Bold.ttf'); font-weight:700; }}
+html, body {{ margin:0; padding:6px; height:100%; box-sizing:border-box; overflow:hidden; background:{fond_page_iframe}; font-family:'Inter', sans-serif; }}
 .dd-grille {{ display:grid; grid-template-columns: repeat(12, 1fr); gap:6px; height:100%; }}
 .dd-carte {{ box-sizing:border-box; border-radius:0px; border:1px solid {bordure}; background:{bg_carte}; box-shadow:0px 1px 3px rgba(0,0,0,0.08); padding:16px 18px; overflow:hidden; }}
 .dd-cercle {{ width:36px; height:36px; border-radius:50%; background:{bg_cercle}; display:flex; align-items:center; justify-content:center; }}
@@ -430,7 +430,7 @@ def rendre_titre_carte(titre: str, couleur: str = None) -> str:
     return (
         f'<div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">'
         f'<span style="width:12px; height:12px; min-width:12px; border-radius:50%; background:{couleur};"></span>'
-        f'<span style="font-size:22px; font-weight:700; color:{couleur_texte}; font-family:\'CaviarDreams\', sans-serif;">{titre}</span>'
+        f'<span style="font-size:22px; font-weight:700; color:{couleur_texte}; font-family:\'Inter\', sans-serif;">{titre}</span>'
         f'</div>'
     )
 
@@ -478,9 +478,9 @@ def rendre_tableau_html(df, hauteur: int = 320) -> str:
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-@font-face {{ font-family:'CaviarDreams'; src:url('app/static/CaviarDreams.ttf'); font-weight:400; }}
-@font-face {{ font-family:'CaviarDreams'; src:url('app/static/CaviarDreams_Bold.ttf'); font-weight:700; }}
-html, body {{ margin:0; padding:6px; height:100%; box-sizing:border-box; overflow:auto; background:transparent; font-family:'CaviarDreams', sans-serif; }}
+@font-face {{ font-family:'Inter'; src:url('app/static/Inter-Regular.ttf'); font-weight:400; }}
+@font-face {{ font-family:'Inter'; src:url('app/static/Inter-Bold.ttf'); font-weight:700; }}
+html, body {{ margin:0; padding:6px; height:100%; box-sizing:border-box; overflow:auto; background:transparent; font-family:'Inter', sans-serif; }}
 .dd-carte {{ box-sizing:border-box; border-radius:0px; border:1px solid {bordure}; background:{bg_carte}; box-shadow:0px 1px 3px rgba(0,0,0,0.08); overflow-x:auto; overflow-y:hidden; }}
 table {{ width:100%; border-collapse:collapse; font-size:14px; }}
 th {{ text-align:center; font-weight:700; color:{couleur_entete}; padding:12px 14px; border-bottom:2px solid {bordure}; white-space:nowrap; }}
@@ -536,9 +536,9 @@ def rendre_carte_graphique_html(titre: str, couleur_puce: str, fig, hauteur: int
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
 <style>
-@font-face {{ font-family:'CaviarDreams'; src:url('app/static/CaviarDreams.ttf'); font-weight:400; }}
-@font-face {{ font-family:'CaviarDreams'; src:url('app/static/CaviarDreams_Bold.ttf'); font-weight:700; }}
-html, body {{ margin: 0; padding: 6px; height: 100%; box-sizing: border-box; overflow: hidden; background: transparent; font-family: 'CaviarDreams', -apple-system, sans-serif; }}
+@font-face {{ font-family:'Inter'; src:url('app/static/Inter-Regular.ttf'); font-weight:400; }}
+@font-face {{ font-family:'Inter'; src:url('app/static/Inter-Bold.ttf'); font-weight:700; }}
+html, body {{ margin: 0; padding: 6px; height: 100%; box-sizing: border-box; overflow: hidden; background: transparent; font-family: 'Inter', -apple-system, sans-serif; }}
 .dd-carte {{
 border-radius: 0px;
 border: 1px solid {bordure};
