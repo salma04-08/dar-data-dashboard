@@ -20,13 +20,13 @@ st.caption(
 
 villes_dispo = get_villes_avec_profils()
 
-with st.sidebar:
-    st.header("Sélection")
+col_sel1, col_sel2 = st.columns(2)
+with col_sel1:
     ville_sel = st.selectbox("Ville", villes_dispo)
 
 quartiers_dispo = get_quartiers_profil_disponibles(ville_sel)
 
-with st.sidebar:
+with col_sel2:
     quartier_sel = st.selectbox("Quartier", quartiers_dispo)
 
 st.info(
